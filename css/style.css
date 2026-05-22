@@ -1,15 +1,16 @@
 :root {
-    --primary-color: #3498db;
-    --primary-dark: #2980b9;
-    --accent-color: #f1c40f;
-    --bg-color: #f8f9fa;
-    --card-bg: #ffffff;
-    --text-color: #2c3e50;
-    --text-muted: #7f8c8d;
-    --border-color: #ecf0f1;
-    --danger-color: #e74c3c;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --radius: 8px;
+    --primary-color: #4facfe;
+    --primary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --accent-color: #ff9a9e;
+    --accent-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+    --bg-color: #f1f5f9;
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --text-color: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+    --danger-color: #ff4d4d;
+    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --radius: 16px;
 }
 
 * {
@@ -21,21 +22,32 @@
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-color);
+    background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+    background-attachment: fixed;
+    min-height: 100vh;
     color: var(--text-color);
     line-height: 1.6;
 }
 
 .container {
-    max-width: 1000px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 0 20px;
 }
 
 header {
-    background-color: var(--card-bg);
-    padding: 1rem 0;
-    box-shadow: var(--shadow);
-    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 header .container {
@@ -45,213 +57,224 @@ header .container {
 }
 
 h1 {
-    font-size: 1.5rem;
-    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: white;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .btn {
-    padding: 0.6rem 1.2rem;
-    border-radius: var(--radius);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
     border: none;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background: var(--primary-gradient);
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(79, 172, 254, 0.4);
 }
 
 .btn-secondary {
-    background-color: var(--border-color);
-    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(5px);
 }
 
-.btn-sm {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .card {
     background-color: var(--card-bg);
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow);
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 #trip-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%);
 }
 
-.trip-info h2 {
+#trip-title {
+    font-size: 2rem;
+    font-weight: 800;
     margin-bottom: 0.5rem;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .trip-info p {
     color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    font-weight: 600;
 }
 
 .trip-stats {
     display: flex;
-    gap: 2rem;
-}
-
-.stat {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    gap: 2.5rem;
 }
 
 .stat span {
-    font-size: 0.8rem;
-    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
 .stat strong {
-    font-size: 1.2rem;
-    color: var(--primary-color);
-}
-
-.editable-stat {
-    cursor: pointer;
-    border-bottom: 2px dashed transparent;
-    transition: border 0.2s;
-}
-
-.editable-stat:hover {
-    border-bottom-color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 800;
 }
 
 .grid-layout {
     display: grid;
-    grid-template-columns: 200px 1fr;
-    gap: 2rem;
+    grid-template-columns: 240px 1fr;
+    gap: 2.5rem;
 }
 
 .days-nav ul {
     list-style: none;
-    background-color: var(--card-bg);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
     border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .days-nav li {
-    padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: all 0.3s;
+    color: white;
+    font-weight: 600;
 }
 
 .days-nav li:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
 .days-nav li.active {
-    background-color: var(--primary-color);
-    color: white;
+    background: var(--primary-gradient);
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
 }
 
 .days-nav li:hover:not(.active) {
-    background-color: #f1f1f1;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.section-header {
+.section-header h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    gap: 10px;
 }
 
 .activities-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    margin-top: 1.5rem;
 }
 
 .activity-card {
     background-color: var(--card-bg);
-    padding: 1rem;
+    padding: 1.5rem;
     border-radius: var(--radius);
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    border-left: 4px solid var(--primary-color);
+    align-items: flex-start;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 6px solid var(--primary-color);
+}
+
+.activity-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .activity-card .time {
-    font-weight: bold;
-    color: var(--primary-color);
-    min-width: 50px;
-}
-
-.activity-card .content {
-    flex-grow: 1;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 1.25rem;
+    font-weight: 800;
+    min-width: 60px;
 }
 
 .activity-card h4 {
-    margin-bottom: 0.2rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
 }
 
 .activity-card p {
-    font-size: 0.9rem;
     color: var(--text-muted);
 }
 
-.actions {
-    display: flex;
-    gap: 0.5rem;
+.editable-stat {
+    position: relative;
 }
 
-.btn-icon {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-muted);
-    padding: 5px;
-    border-radius: 4px;
-    transition: background 0.2s;
+.editable-stat::after {
+    content: '✎';
+    font-size: 0.8rem;
+    margin-left: 8px;
+    opacity: 0.3;
+    transition: opacity 0.2s;
 }
 
-.btn-icon:hover {
-    background-color: var(--border-color);
+.editable-stat:hover::after {
+    opacity: 1;
 }
 
-.text-danger {
-    color: var(--danger-color) !important;
-}
-
-@media (max-width: 768px) {
+@media (max-width: 850px) {
     .grid-layout {
         grid-template-columns: 1fr;
     }
     
-    #trip-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+    .days-nav ul {
+        display: flex;
+        overflow-x: auto;
+        padding: 0.5rem;
+        gap: 0.5rem;
     }
     
+    .days-nav li {
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
+
+    #trip-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.5rem;
+    }
+
     .trip-stats {
         width: 100%;
-        justify-content: space-between;
+        justify-content: center;
+        gap: 3rem;
     }
 }
