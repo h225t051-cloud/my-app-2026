@@ -10,60 +10,78 @@
 <body>
     <header>
         <div class="container">
-            <h1><i data-lucide="map-pin"></i> TabiPlan</h1>
+            <h1 id="logo" style="cursor: pointer;"><i data-lucide="map-pin"></i> TabiPlan</h1>
             <nav>
+                <button id="back-to-home" class="btn btn-secondary" style="display: none;"><i data-lucide="arrow-left"></i> 戻る</button>
                 <button id="add-trip-btn" class="btn btn-primary"><i data-lucide="plus"></i> 新しい旅行</button>
             </nav>
         </div>
     </header>
 
     <main class="container">
-        <section id="trip-header" class="card">
-            <div class="trip-info">
-                <h2 id="trip-title">北海道 4泊5日の旅</h2>
-                <p id="trip-dates"><i data-lucide="calendar"></i> 2026/06/01 - 2026/06/05</p>
-            </div>
-            <div class="trip-stats">
-                <div class="stat">
-                    <span>予算</span>
-                    <strong id="total-budget" class="editable-stat">¥150,000</strong>
-                </div>
-                <div class="stat">
-                    <span>支出</span>
-                    <strong id="total-spent">¥0</strong>
-                </div>
+        <!-- Dashboard View -->
+        <section id="dashboard-view">
+            <h2 class="section-title">マイ・トリップ</h2>
+            <div id="trips-grid" class="trips-grid">
+                <!-- Trip cards will be injected here -->
             </div>
         </section>
 
-        <section id="itinerary" class="grid-layout">
-            <div class="days-nav">
-                <ul id="days-list">
-                    <li class="active">1日目</li>
-                    <li>2日目</li>
-                    <li>3日目</li>
-                    <li>4日目</li>
-                    <li>5日目</li>
-                </ul>
-            </div>
-            <div class="activities-view">
-                <div class="section-header">
-                    <h3><i data-lucide="clock"></i> スケジュール</h3>
-                    <button id="add-activity-btn" class="btn btn-secondary btn-sm"><i data-lucide="plus"></i> 追加</button>
+        <!-- Trip Details View -->
+        <section id="trip-view" style="display: none;">
+            <div id="trip-header" class="card">
+                <div class="trip-info">
+                    <h2 id="trip-title">旅行タイトル</h2>
+                    <p id="trip-dates"><i data-lucide="calendar"></i> 2026/01/01 - 2026/01/01</p>
                 </div>
-                <div id="activities-list" class="activities-list">
-                    <!-- Activities will be injected here -->
-                    <div class="activity-card">
-                        <div class="time">09:00</div>
-                        <div class="content">
-                            <h4>新千歳空港 到着</h4>
-                            <p>レンタカー受け取り</p>
+                <div class="trip-stats">
+                    <div class="stat">
+                        <span>合計予算</span>
+                        <strong id="total-budget" class="editable-stat">¥0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>予定支出</span>
+                        <strong id="total-spent" class="text-primary">¥0</strong>
+                    </div>
+                    <div class="stat">
+                        <span>残り</span>
+                        <strong id="budget-left">¥0</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="trip-content-grid">
+                <div class="main-column">
+                    <div class="grid-layout">
+                        <div class="days-nav">
+                            <ul id="days-list"></ul>
                         </div>
-                        <div class="actions">
-                            <button class="btn-icon"><i data-lucide="edit-2"></i></button>
-                            <button class="btn-icon text-danger"><i data-lucide="trash-2"></i></button>
+                        <div class="activities-view">
+                            <div class="section-header">
+                                <h3><i data-lucide="clock"></i> スケジュール</h3>
+                                <button id="add-activity-btn" class="btn btn-secondary btn-sm"><i data-lucide="plus"></i> 予定を追加</button>
+                            </div>
+                            <div id="activities-list" class="activities-list"></div>
                         </div>
                     </div>
                 </div>
+                
+                <aside class="side-column">
+                    <section class="card side-card">
+                        <h3><i data-lucide="info"></i> 旅先メモ & SNS</h3>
+                        <textarea id="trip-notes" placeholder="行きたい場所のURLやSNSの情報をメモ..." class="memo-area"></textarea>
+                    </section>
+
+                    <section class="card side-card">
+                        <div class="section-header">
+                            <h3><i data-lucide="star"></i> おすすめ</h3>
+                            <button id="add-recom-btn" class="btn-icon"><i data-lucide="plus"></i></button>
+                        </div>
+                        <div id="recom-list" class="recom-list">
+                            <!-- Recommendations here -->
+                        </div>
+                    </section>
+                </aside>
             </div>
         </section>
     </main>
