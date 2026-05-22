@@ -13,6 +13,7 @@
             <h1 id="logo" style="cursor: pointer;"><i data-lucide="map-pin"></i> TabiPlan</h1>
             <nav>
                 <button id="back-to-home" class="btn btn-secondary" style="display: none;"><i data-lucide="arrow-left"></i> 戻る</button>
+                <button id="import-trip-btn" class="btn btn-secondary"><i data-lucide="download"></i> 読込</button>
                 <button id="add-trip-btn" class="btn btn-primary"><i data-lucide="plus"></i> 新しい旅行</button>
             </nav>
         </div>
@@ -47,6 +48,7 @@
                         <span>残り</span>
                         <strong id="budget-left">¥0</strong>
                     </div>
+                    <button id="share-trip-btn" class="btn btn-secondary"><i data-lucide="share-2"></i> 共有</button>
                 </div>
             </div>
 
@@ -64,6 +66,18 @@
                             <div id="activities-list" class="activities-list"></div>
                         </div>
                     </div>
+
+                    <!-- Comments Section -->
+                    <section class="card comments-section" style="margin-top: 2.5rem;">
+                        <h3><i data-lucide="message-circle"></i> 交流・コメント</h3>
+                        <div id="comments-list" class="comments-list">
+                            <!-- Comments will be injected here -->
+                        </div>
+                        <div class="comment-input-area">
+                            <input type="text" id="comment-input" placeholder="コメントやアドバイスを入力...">
+                            <button id="add-comment-btn" class="btn btn-primary btn-sm">送信</button>
+                        </div>
+                    </section>
                 </div>
                 
                 <aside class="side-column">
@@ -96,6 +110,87 @@
             </div>
         </section>
     </main>
+
+    <!-- Modal for Adding/Editing Activity -->
+    <div id="activity-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3 id="modal-title">予定の追加</h3>
+                <button id="close-modal" class="btn-icon"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>タイトル</label>
+                    <input type="text" id="modal-activity-title" placeholder="例：新千歳空港 到着">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>時間</label>
+                        <input type="time" id="modal-activity-time" value="10:00">
+                    </div>
+                    <div class="input-group">
+                        <label>費用 (¥)</label>
+                        <input type="number" id="modal-activity-cost" placeholder="0">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>参考URL (SNSなど)</label>
+                    <input type="url" id="modal-activity-url" placeholder="https://instagram.com/...">
+                </div>
+                <div class="input-group">
+                    <label>メモ</label>
+                    <textarea id="modal-activity-desc" placeholder="詳細な内容や注意点..."></textarea>
+                </div>
+                <button id="save-activity-btn" class="btn btn-primary btn-block">保存する</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Trip Modal -->
+    <div id="share-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>旅行プランを共有</h3>
+                <button id="close-share-modal" class="btn-icon"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>以下の共有コードを友達に送ってください：</p>
+                <textarea id="share-code" readonly class="memo-area" style="min-height: 100px; font-size: 0.8rem;"></textarea>
+                <button id="copy-share-code" class="btn btn-secondary btn-block">コードをコピー</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New Trip -->
+    <div id="trip-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card" style="border-top-color: var(--vibrant-2);">
+            <div class="modal-header">
+                <h3>新しい旅行の作成</h3>
+                <button id="close-trip-modal" class="btn-icon"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>旅行のタイトル</label>
+                    <input type="text" id="modal-trip-title" placeholder="例：夏の北海道 5日間の旅">
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>開始日</label>
+                        <input type="date" id="modal-trip-start" value="2026-06-01">
+                    </div>
+                    <div class="input-group">
+                        <label>終了日</label>
+                        <input type="date" id="modal-trip-end" value="2026-06-05">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>全体の予算 (¥)</label>
+                    <input type="number" id="modal-trip-budget" value="100000">
+                </div>
+                <button id="create-trip-btn" class="btn btn-primary btn-block">作成する</button>
+            </div>
+        </div>
+    </div>
 
     <script src="js/storage.js"></script>
     <script src="js/ui.js"></script>

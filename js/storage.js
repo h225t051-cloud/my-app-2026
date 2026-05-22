@@ -13,12 +13,14 @@ const Storage = {
             return trips.map(trip => ({
                 recommendations: [],
                 notes: '',
+                comments: [],
                 ...trip,
                 itinerary: trip.itinerary.map(day => ({
                     ...day,
                     activities: day.activities.map(act => ({
                         cost: 0,
                         url: '',
+                        description: '',
                         ...act
                     }))
                 }))
@@ -32,9 +34,10 @@ const Storage = {
             trip.id = Date.now().toString();
             trip.recommendations = [];
             trip.notes = '';
+            trip.comments = [];
             trip.itinerary = trip.itinerary.map(day => ({
                 ...day,
-                activities: day.activities.map(act => ({ cost: 0, url: '', ...act }))
+                activities: day.activities.map(act => ({ cost: 0, url: '', description: '', ...act }))
             }));
             const trips = [trip];
             this.saveAll(trips);
@@ -70,8 +73,12 @@ const Storage = {
             budget: 200000,
             notes: 'SNSで見た「青い池」のライトアップは時期的にやっていないかも。',
             recommendations: [
-                { title: '富良野バーガー', type: 'food', url: 'https://example.com' },
-                { title: '四季彩の丘', type: 'spot', url: 'https://example.com' }
+                { title: '富良野バーガー', url: 'https://example.com' },
+                { title: '四季彩の丘', url: 'https://example.com' }
+            ],
+            comments: [
+                { user: 'TripExpert', text: '富良野バーガーは11時開店ですが、15分前には並ぶのが吉です！', date: '2026-05-20' },
+                { user: 'Locals', text: '青い池の近くの白ひげの滝もおすすめですよ。', date: '2026-05-21' }
             ],
             itinerary: [
                 {

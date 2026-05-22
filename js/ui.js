@@ -4,6 +4,7 @@ const UI = {
         document.getElementById('trip-view').style.display = viewId === 'trip' ? 'block' : 'none';
         document.getElementById('back-to-home').style.display = viewId === 'trip' ? 'inline-flex' : 'none';
         document.getElementById('add-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
+        document.getElementById('import-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
     },
 
     renderDashboard(trips) {
@@ -35,7 +36,6 @@ const UI = {
         document.getElementById('trip-dates').innerHTML = `<i data-lucide="calendar"></i> ${data.startDate} - ${data.endDate}`;
         document.getElementById('total-budget').textContent = `¥${data.budget.toLocaleString()}`;
         
-        // Calculate total spent
         let totalSpent = 0;
         data.itinerary.forEach(day => {
             day.activities.forEach(act => {
@@ -54,6 +54,7 @@ const UI = {
         document.getElementById('trip-notes').value = data.notes || '';
         
         this.renderRecommendations(data.recommendations || []);
+        this.renderComments(data.comments || []);
         lucide.createIcons();
     },
 
@@ -73,6 +74,27 @@ const UI = {
                     ${re.url ? `<a href="${re.url}" target="_blank" class="recom-item-link">リンクを見る</a>` : ''}
                 </div>
                 <button class="btn-icon-delete" onclick="deleteRecom(${index})"><i data-lucide="x" style="width:14px;height:14px;"></i></button>
+            `;
+            list.appendChild(div);
+        });
+    },
+
+    renderComments(comments) {
+        const list = document.getElementById('comments-list');
+        list.innerHTML = '';
+        if (comments.length === 0) {
+            list.innerHTML = '<p class="text-muted">コメントはまだありません。</p>';
+            return;
+        }
+        comments.forEach(com => {
+            const div = document.createElement('div');
+            div.className = 'comment-item';
+            div.innerHTML = `
+                <div class="comment-header">
+                    <span>${com.user}</span>
+                    <span>${com.date}</span>
+                </div>
+                <div class="comment-body">${com.text}</div>
             `;
             list.appendChild(div);
         });
@@ -109,14 +131,14 @@ const UI = {
                 <div class="time">${act.time}</div>
                 <div class="content" style="width: 100%;">
                     <h4>${act.title}</h4>
-                    <p>${act.description}</p>
+                    ${act.description ? `<p class="activity-desc"><i data-lucide="sticky-note" style="width:14px;height:14px;vertical-align:middle;"></i> ${act.description}</p>` : ''}
                     <div class="footer">
                         <span class="cost">費用: ¥${(act.cost || 0).toLocaleString()}</span>
                         ${act.url ? `<a href="${act.url}" target="_blank" class="link"><i data-lucide="external-link"></i> リンク</a>` : ''}
                     </div>
                 </div>
                 <div class="actions">
-                    <button class="btn-icon" onclick="editActivity('${act.id}')"><i data-lucide="edit-2"></i></button>
+                    <button class="btn-icon" onclick="openEditModal('${act.id}')"><i data-lucide="edit-2"></i></button>
                     <button class="btn-icon text-danger" onclick="deleteActivity('${act.id}')"><i data-lucide="trash-2"></i></button>
                 </div>
             `;

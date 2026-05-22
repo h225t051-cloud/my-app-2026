@@ -1,11 +1,13 @@
 let allTrips = [];
 let currentTrip = null;
 let currentDay = 1;
+let editingActivityId = null;
 
 function init() {
     allTrips = Storage.loadAll();
     showDashboard();
 
+    // Custom Event Listeners
     document.addEventListener('dayChange', (e) => {
         currentDay = e.detail;
         updateTripUI();
@@ -15,15 +17,121 @@ function init() {
         openTrip(e.detail);
     });
 
+    // Navigation
     document.getElementById('logo').addEventListener('click', showDashboard);
     document.getElementById('back-to-home').addEventListener('click', showDashboard);
 
+    // Dashboard Actions
+    document.getElementById('add-trip-btn').addEventListener('click', () => {
+        document.getElementById('modal-trip-title').value = '';
+        document.getElementById('trip-modal').style.display = 'flex';
+    });
+
+    document.getElementById('close-trip-modal').addEventListener('click', () => {
+        document.getElementById('trip-modal').style.display = 'none';
+    });
+
+    document.getElementById('create-trip-btn').addEventListener('click', () => {
+        const title = document.getElementById('modal-trip-title').value;
+        if (!title) return alert('タイトルを入力してください');
+        
+        const startDate = document.getElementById('modal-trip-start').value;
+        const endDate = document.getElementById('modal-trip-end').value;
+        const budget = parseInt(document.getElementById('modal-trip-budget').value) || 0;
+
+        const newTrip = {
+            id: Date.now().toString(),
+            title: title,
+            startDate: startDate,
+            endDate: endDate,
+            budget: budget,
+            notes: '',
+            recommendations: [],
+            comments: [],
+            itinerary: []
+        };
+        const start = new Date(newTrip.startDate);
+        const end = new Date(newTrip.endDate);
+        const diffDays = Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
+        for (let i = 1; i <= diffDays; i++) newTrip.itinerary.push({ day: i, activities: [] });
+        allTrips.push(newTrip);
+        Storage.saveAll(allTrips);
+        showDashboard();
+        document.getElementById('trip-modal').style.display = 'none';
+    });
+
+    document.getElementById('import-trip-btn').addEventListener('click', () => {
+        const code = prompt('共有コードを貼り付けてください');
+        if (code) {
+            try {
+                const trip = JSON.parse(atob(code));
+                trip.id = Date.now().toString(); // New ID for imported trip
+                allTrips.push(trip);
+                Storage.saveAll(allTrips);
+                showDashboard();
+                alert('旅行プランを読み込みました！');
+            } catch (e) {
+                alert('無効な共有コードです。');
+            }
+        }
+    });
+
+    // Trip View Actions
     document.getElementById('trip-notes').addEventListener('input', (e) => {
         if (currentTrip) {
             currentTrip.notes = e.target.value;
             Storage.saveTrip(currentTrip);
         }
     });
+
+    document.getElementById('share-trip-btn').addEventListener('click', () => {
+        const code = btoa(JSON.stringify(currentTrip));
+        document.getElementById('share-code').value = code;
+        document.getElementById('share-modal').style.display = 'flex';
+    });
+
+    document.getElementById('close-share-modal').addEventListener('click', () => {
+        document.getElementById('share-modal').style.display = 'none';
+    });
+
+    document.getElementById('copy-share-code').addEventListener('click', () => {
+        const el = document.getElementById('share-code');
+        el.select();
+        document.execCommand('copy');
+        alert('共有コードをコピーしました！');
+    });
+
+    document.getElementById('add-comment-btn').addEventListener('click', () => {
+        const input = document.getElementById('comment-input');
+        if (input.value) {
+            const newComment = {
+                user: 'ゲスト', // Simplified
+                text: input.value,
+                date: new Date().toISOString().split('T')[0]
+            };
+            currentTrip.comments.push(newComment);
+            Storage.saveTrip(currentTrip);
+            UI.renderComments(currentTrip.comments);
+            input.value = '';
+        }
+    });
+
+    document.getElementById('add-activity-btn').addEventListener('click', () => {
+        editingActivityId = null;
+        document.getElementById('modal-title').textContent = '予定の追加';
+        document.getElementById('modal-activity-title').value = '';
+        document.getElementById('modal-activity-time').value = '10:00';
+        document.getElementById('modal-activity-cost').value = '';
+        document.getElementById('modal-activity-url').value = '';
+        document.getElementById('modal-activity-desc').value = '';
+        document.getElementById('activity-modal').style.display = 'flex';
+    });
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+        document.getElementById('activity-modal').style.display = 'none';
+    });
+
+    document.getElementById('save-activity-btn').addEventListener('click', saveActivity);
 
     document.getElementById('add-recom-btn').addEventListener('click', () => {
         const title = prompt('スポット名や店名を入力してください');
@@ -35,91 +143,47 @@ function init() {
         }
     });
 
-    // Search functionality
+    // Search
     const searchInput = document.getElementById('pac-input');
     searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && searchInput.value) {
             const query = searchInput.value;
-            if (query) {
-                // Open Google Maps search in a new tab
-                window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
-                
-                // Optional: Automatically add to recommendations if user confirms
-                if (confirm(`「${query}」をおすすめリストに追加しますか？`)) {
-                    currentTrip.recommendations.push({ 
-                        title: query, 
-                        url: `https://www.google.com/maps/search/${encodeURIComponent(query)}` 
-                    });
-                    Storage.saveTrip(currentTrip);
-                    UI.renderRecommendations(currentTrip.recommendations);
-                    searchInput.value = '';
-                }
+            window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+            if (confirm(`「${query}」をおすすめリストに追加しますか？`)) {
+                currentTrip.recommendations.push({ title: query, url: `https://www.google.com/maps/search/${encodeURIComponent(query)}` });
+                Storage.saveTrip(currentTrip);
+                UI.renderRecommendations(currentTrip.recommendations);
+                searchInput.value = '';
             }
         }
     });
+}
 
-    document.getElementById('add-trip-btn').addEventListener('click', () => {
-        const title = prompt('旅行のタイトルを入力してください');
-        if (title) {
-            const startDate = prompt('開始日を入力してください (YYYY-MM-DD)', '2026-06-01');
-            const endDate = prompt('終了日を入力してください (YYYY-MM-DD)', '2026-06-05');
-            const newTrip = {
-                id: Date.now().toString(),
-                title: title,
-                startDate: startDate || '2026-06-01',
-                endDate: endDate || '2026-06-05',
-                budget: 100000,
-                notes: '',
-                recommendations: [],
-                itinerary: []
-            };
-            
-            const start = new Date(newTrip.startDate);
-            const end = new Date(newTrip.endDate);
-            const diffTime = Math.abs(end - start);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-            
-            for (let i = 1; i <= diffDays; i++) {
-                newTrip.itinerary.push({ day: i, activities: [] });
-            }
-
-            allTrips.push(newTrip);
-            Storage.saveAll(allTrips);
-            showDashboard();
-        }
-    });
-
-    document.getElementById('add-activity-btn').addEventListener('click', () => {
-        const title = prompt('予定のタイトルを入力してください');
-        if (title) {
-            const time = prompt('時間を入力してください (例: 10:00)', '10:00');
-            const cost = prompt('予想費用を入力してください (円)', '0');
-            const url = prompt('参考URLがあれば入力してください', 'https://');
-            
-            const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
-            const newId = Date.now().toString();
-            dayData.activities.push({
-                id: newId,
-                title: title,
-                time: time || '00:00',
-                description: '',
-                cost: parseInt(cost) || 0,
-                url: url === 'https://' ? '' : url
-            });
-            dayData.activities.sort((a, b) => a.time.localeCompare(b.time));
-            Storage.saveTrip(currentTrip);
-            updateTripUI();
-        }
-    });
-
-    document.getElementById('total-budget').addEventListener('click', () => {
-        const newBudget = prompt('予算を入力してください', currentTrip.budget);
-        if (newBudget && !isNaN(newBudget)) {
-            currentTrip.budget = parseInt(newBudget);
-            Storage.saveTrip(currentTrip);
-            updateTripUI();
-        }
-    });
+function saveActivity() {
+    const title = document.getElementById('modal-activity-title').value;
+    if (!title) return alert('タイトルを入力してください');
+    
+    const time = document.getElementById('modal-activity-time').value;
+    const cost = parseInt(document.getElementById('modal-activity-cost').value) || 0;
+    const url = document.getElementById('modal-activity-url').value;
+    const desc = document.getElementById('modal-activity-desc').value;
+    
+    const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
+    
+    if (editingActivityId) {
+        const act = dayData.activities.find(a => a.id === editingActivityId);
+        Object.assign(act, { title, time, cost, url, description: desc });
+    } else {
+        dayData.activities.push({
+            id: Date.now().toString(),
+            title, time, cost, url, description: desc
+        });
+    }
+    
+    dayData.activities.sort((a, b) => a.time.localeCompare(b.time));
+    Storage.saveTrip(currentTrip);
+    updateTripUI();
+    document.getElementById('activity-modal').style.display = 'none';
 }
 
 function showDashboard() {
@@ -138,42 +202,39 @@ function openTrip(id) {
 function updateTripUI() {
     UI.renderTripHeader(currentTrip);
     UI.renderDaysNav(currentTrip.itinerary, currentDay);
-    
     const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
     UI.renderActivities(dayData ? dayData.activities : []);
 }
 
-window.deleteTrip = function(event, id) {
-    event.stopPropagation();
-    if (confirm('この旅行計画を削除しますか？')) {
-        Storage.deleteTrip(id);
-        showDashboard();
-    }
+window.openEditModal = function(id) {
+    editingActivityId = id;
+    const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
+    const act = dayData.activities.find(a => a.id === id);
+    
+    document.getElementById('modal-title').textContent = '予定の編集';
+    document.getElementById('modal-activity-title').value = act.title;
+    document.getElementById('modal-activity-time').value = act.time;
+    document.getElementById('modal-activity-cost').value = act.cost;
+    document.getElementById('modal-activity-url').value = act.url;
+    document.getElementById('modal-activity-desc').value = act.description || '';
+    document.getElementById('activity-modal').style.display = 'flex';
 };
 
-window.deleteRecom = function(index) {
+window.deleteTrip = (e, id) => {
+    e.stopPropagation();
+    if (confirm('削除しますか？')) { Storage.deleteTrip(id); showDashboard(); }
+};
+
+window.deleteRecom = (index) => {
     currentTrip.recommendations.splice(index, 1);
     Storage.saveTrip(currentTrip);
     UI.renderRecommendations(currentTrip.recommendations);
 };
 
-window.deleteActivity = function(id) {
-    if (confirm('この予定を削除しますか？')) {
+window.deleteActivity = (id) => {
+    if (confirm('削除しますか？')) {
         const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
         dayData.activities = dayData.activities.filter(a => a.id !== id);
-        Storage.saveTrip(currentTrip);
-        updateTripUI();
-    }
-};
-
-window.editActivity = function(id) {
-    const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
-    const act = dayData.activities.find(a => a.id === id);
-    const newTitle = prompt('タイトルを入力してください', act.title);
-    if (newTitle) {
-        act.title = newTitle;
-        const newCost = prompt('費用を入力してください', act.cost);
-        act.cost = parseInt(newCost) || 0;
         Storage.saveTrip(currentTrip);
         updateTripUI();
     }
