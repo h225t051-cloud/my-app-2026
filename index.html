@@ -68,6 +68,17 @@
                 
                 <aside class="side-column">
                     <section class="card side-card">
+                        <h3><i data-lucide="search"></i> スポットを検索</h3>
+                        <div class="map-search-container">
+                            <input id="pac-input" class="pac-input" type="text" placeholder="観光地やお店を検索...">
+                            <div id="map-preview" style="display:none;"></div>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
+                                <i data-lucide="info"></i> Googleマップで詳細を見る
+                            </p>
+                        </div>
+                    </section>
+
+                    <section class="card side-card">
                         <h3><i data-lucide="info"></i> 旅先メモ & SNS</h3>
                         <textarea id="trip-notes" placeholder="行きたい場所のURLやSNSの情報をメモ..." class="memo-area"></textarea>
                     </section>

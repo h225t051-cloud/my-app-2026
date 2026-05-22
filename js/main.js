@@ -35,6 +35,29 @@ function init() {
         }
     });
 
+    // Search functionality
+    const searchInput = document.getElementById('pac-input');
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const query = searchInput.value;
+            if (query) {
+                // Open Google Maps search in a new tab
+                window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
+                
+                // Optional: Automatically add to recommendations if user confirms
+                if (confirm(`「${query}」をおすすめリストに追加しますか？`)) {
+                    currentTrip.recommendations.push({ 
+                        title: query, 
+                        url: `https://www.google.com/maps/search/${encodeURIComponent(query)}` 
+                    });
+                    Storage.saveTrip(currentTrip);
+                    UI.renderRecommendations(currentTrip.recommendations);
+                    searchInput.value = '';
+                }
+            }
+        }
+    });
+
     document.getElementById('add-trip-btn').addEventListener('click', () => {
         const title = prompt('旅行のタイトルを入力してください');
         if (title) {
