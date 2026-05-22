@@ -2,6 +2,7 @@ const UI = {
     showView(viewId) {
         document.getElementById('dashboard-view').style.display = viewId === 'dashboard' ? 'block' : 'none';
         document.getElementById('trip-view').style.display = viewId === 'trip' ? 'block' : 'none';
+        document.querySelector('.tab-nav').style.display = viewId === 'dashboard' ? 'flex' : 'none';
         document.getElementById('back-to-home').style.display = viewId === 'trip' ? 'inline-flex' : 'none';
         document.getElementById('add-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
         document.getElementById('import-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
@@ -11,6 +12,10 @@ const UI = {
         const grid = document.getElementById('trips-grid');
         grid.innerHTML = '';
         
+        if (trips.length === 0) {
+            grid.innerHTML = '<p class="text-muted">まだ旅行計画がありません。「新しい旅行」から作成しましょう！</p>';
+        }
+
         trips.forEach(trip => {
             const card = document.createElement('div');
             card.className = 'trip-card';
@@ -24,6 +29,32 @@ const UI = {
             `;
             card.addEventListener('click', () => {
                 const event = new CustomEvent('openTrip', { detail: trip.id });
+                document.dispatchEvent(event);
+            });
+            grid.appendChild(card);
+        });
+        lucide.createIcons();
+    },
+
+    renderExplore(trips) {
+        const grid = document.getElementById('explore-grid');
+        grid.innerHTML = '';
+        
+        trips.forEach(trip => {
+            const card = document.createElement('div');
+            card.className = 'trip-card';
+            card.style.borderLeft = '8px solid var(--accent-color)';
+            card.innerHTML = `
+                <div class="badge" style="background: var(--accent-color); color: var(--text-color); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; width: fit-content; margin-bottom: 8px;">PUBLIC</div>
+                <h3>${trip.title}</h3>
+                <div class="trip-meta"><i data-lucide="user"></i> ${trip.author || '旅行者さん'}</div>
+                <div class="trip-meta"><i data-lucide="calendar"></i> ${trip.startDate} - ${trip.endDate}</div>
+                <div class="trip-footer">
+                    <button class="btn btn-secondary btn-sm" onclick="importFromExplore(event, '${btoa(JSON.stringify(trip))}')"><i data-lucide="download"></i> プランをコピー</button>
+                </div>
+            `;
+            card.addEventListener('click', () => {
+                const event = new CustomEvent('openTrip', { detail: trip.id, isExplore: true });
                 document.dispatchEvent(event);
             });
             grid.appendChild(card);

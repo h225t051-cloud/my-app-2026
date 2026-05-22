@@ -64,6 +64,47 @@ const Storage = {
         this.saveAll(trips);
     },
 
+    loadExplore() {
+        return [
+            {
+                id: 'exp-1',
+                author: '旅好き太郎',
+                title: '冬の京都・静寂の寺院巡り',
+                startDate: '2026-01-10',
+                endDate: '2026-01-12',
+                budget: 50000,
+                notes: '冬の京都は底冷えするのでカイロ必須！',
+                recommendations: [
+                    { title: '南禅寺', url: 'https://www.nanzenji.or.jp/' },
+                    { title: '湯豆腐 嵯峨野', url: 'http://www.kyoto-sagano.jp/' }
+                ],
+                comments: [{ user: 'ガイドさん', text: '朝一番の清水寺は空いていて最高ですよ。', date: '2026-01-05' }],
+                itinerary: [
+                    { day: 1, activities: [{ time: '10:00', title: '京都駅 到着', cost: 0, description: 'ここから旅がスタート！' }] },
+                    { day: 2, activities: [] },
+                    { day: 3, activities: [] }
+                ]
+            },
+            {
+                id: 'exp-2',
+                author: '温泉マニア',
+                title: '箱根 1泊2日 癒やしの温泉旅',
+                startDate: '2026-02-15',
+                endDate: '2026-02-16',
+                budget: 35000,
+                notes: 'ロマンスカーの展望席は早めの予約を。',
+                recommendations: [
+                    { title: '彫刻の森美術館', url: 'https://www.hakone-oam.or.jp/' }
+                ],
+                comments: [],
+                itinerary: [
+                    { day: 1, activities: [] },
+                    { day: 2, activities: [] }
+                ]
+            }
+        ];
+    },
+
     getDefaultTrip() {
         return {
             id: 'default-1',

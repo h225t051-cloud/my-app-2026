@@ -20,11 +20,26 @@
     </header>
 
     <main class="container">
+        <!-- Tab Navigation -->
+        <nav class="tab-nav">
+            <div id="tab-my-trips" class="tab-btn active">マイ・プラン</div>
+            <div id="tab-explore" class="tab-btn">みんなの記録</div>
+        </nav>
+
         <!-- Dashboard View -->
         <section id="dashboard-view">
-            <h2 class="section-title">マイ・トリップ</h2>
-            <div id="trips-grid" class="trips-grid">
-                <!-- Trip cards will be injected here -->
+            <div id="my-trips-section">
+                <h2 class="section-title">マイ・トリップ</h2>
+                <div id="trips-grid" class="trips-grid">
+                    <!-- Trip cards will be injected here -->
+                </div>
+            </div>
+            
+            <div id="explore-section" style="display: none;">
+                <h2 class="section-title">おすすめの旅行記録</h2>
+                <div id="explore-grid" class="trips-grid">
+                    <!-- Sample public trip cards will be injected here -->
+                </div>
             </div>
         </section>
 
@@ -84,7 +99,10 @@
                     <section class="card side-card">
                         <h3><i data-lucide="search"></i> スポットを検索</h3>
                         <div class="map-search-container">
-                            <input id="pac-input" class="pac-input" type="text" placeholder="観光地やお店を検索...">
+                            <div style="display: flex; gap: 8px;">
+                                <input id="pac-input" class="pac-input" type="text" placeholder="観光地やお店を検索...">
+                                <button id="search-go-btn" class="btn btn-primary" style="padding: 0 15px;"><i data-lucide="search"></i></button>
+                            </div>
                             <div id="map-preview" style="display:none;"></div>
                             <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 8px;">
                                 <i data-lucide="info"></i> Googleマップで詳細を見る

@@ -1,10 +1,12 @@
 let allTrips = [];
+let exploreTrips = [];
 let currentTrip = null;
 let currentDay = 1;
 let editingActivityId = null;
 
 function init() {
     allTrips = Storage.loadAll();
+    exploreTrips = Storage.loadExplore();
     showDashboard();
 
     // Custom Event Listeners
@@ -14,7 +16,24 @@ function init() {
     });
 
     document.addEventListener('openTrip', (e) => {
-        openTrip(e.detail);
+        openTrip(e.detail, e.isExplore);
+    });
+
+    // Tab Switching
+    document.getElementById('tab-my-trips').addEventListener('click', () => {
+        document.getElementById('tab-my-trips').classList.add('active');
+        document.getElementById('tab-explore').classList.remove('active');
+        document.getElementById('my-trips-section').style.display = 'block';
+        document.getElementById('explore-section').style.display = 'none';
+        showDashboard();
+    });
+
+    document.getElementById('tab-explore').addEventListener('click', () => {
+        document.getElementById('tab-explore').classList.add('active');
+        document.getElementById('tab-my-trips').classList.remove('active');
+        document.getElementById('explore-section').style.display = 'block';
+        document.getElementById('my-trips-section').style.display = 'none';
+        UI.renderExplore(exploreTrips);
     });
 
     // Navigation
@@ -63,28 +82,20 @@ function init() {
     document.getElementById('import-trip-btn').addEventListener('click', () => {
         const code = prompt('共有コードを貼り付けてください');
         if (code) {
-            try {
-                const trip = JSON.parse(atob(code));
-                trip.id = Date.now().toString(); // New ID for imported trip
-                allTrips.push(trip);
-                Storage.saveAll(allTrips);
-                showDashboard();
-                alert('旅行プランを読み込みました！');
-            } catch (e) {
-                alert('無効な共有コードです。');
-            }
+            importTrip(code);
         }
     });
 
     // Trip View Actions
     document.getElementById('trip-notes').addEventListener('input', (e) => {
-        if (currentTrip) {
+        if (currentTrip && !currentTrip.isExplore) {
             currentTrip.notes = e.target.value;
             Storage.saveTrip(currentTrip);
         }
     });
 
     document.getElementById('share-trip-btn').addEventListener('click', () => {
+        if (!currentTrip) return;
         const code = btoa(JSON.stringify(currentTrip));
         document.getElementById('share-code').value = code;
         document.getElementById('share-modal').style.display = 'flex';
@@ -103,9 +114,9 @@ function init() {
 
     document.getElementById('add-comment-btn').addEventListener('click', () => {
         const input = document.getElementById('comment-input');
-        if (input.value) {
+        if (input.value && currentTrip && !currentTrip.isExplore) {
             const newComment = {
-                user: 'ゲスト', // Simplified
+                user: 'ゲスト', 
                 text: input.value,
                 date: new Date().toISOString().split('T')[0]
             };
@@ -113,10 +124,13 @@ function init() {
             Storage.saveTrip(currentTrip);
             UI.renderComments(currentTrip.comments);
             input.value = '';
+        } else if (currentTrip.isExplore) {
+            alert('見本プランにはコメントできません。自分のプランにコピーしてからお試しください。');
         }
     });
 
     document.getElementById('add-activity-btn').addEventListener('click', () => {
+        if (currentTrip.isExplore) return alert('見本プランは編集できません。コピーしてからお試しください。');
         editingActivityId = null;
         document.getElementById('modal-title').textContent = '予定の追加';
         document.getElementById('modal-activity-title').value = '';
@@ -134,6 +148,7 @@ function init() {
     document.getElementById('save-activity-btn').addEventListener('click', saveActivity);
 
     document.getElementById('add-recom-btn').addEventListener('click', () => {
+        if (currentTrip.isExplore) return alert('見本プランは編集できません。');
         const title = prompt('スポット名や店名を入力してください');
         if (title) {
             const url = prompt('URLがあれば入力してください', 'https://');
@@ -145,19 +160,47 @@ function init() {
 
     // Search
     const searchInput = document.getElementById('pac-input');
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' && searchInput.value) {
-            const query = searchInput.value;
+    const searchBtn = document.getElementById('search-go-btn');
+    
+    const performSearch = () => {
+        const query = searchInput.value;
+        if (query) {
             window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
-            if (confirm(`「${query}」をおすすめリストに追加しますか？`)) {
+            if (!currentTrip.isExplore && confirm(`「${query}」をおすすめリストに追加しますか？`)) {
                 currentTrip.recommendations.push({ title: query, url: `https://www.google.com/maps/search/${encodeURIComponent(query)}` });
                 Storage.saveTrip(currentTrip);
                 UI.renderRecommendations(currentTrip.recommendations);
                 searchInput.value = '';
             }
         }
+    };
+
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') performSearch();
     });
+    searchBtn.addEventListener('click', performSearch);
 }
+
+function importTrip(code) {
+    try {
+        const trip = JSON.parse(atob(code));
+        trip.id = Date.now().toString(); 
+        allTrips.push(trip);
+        Storage.saveAll(allTrips);
+        showDashboard();
+        alert('旅行プランを読み込みました！「マイ・プラン」を確認してください。');
+        
+        // Switch back to my trips tab
+        document.getElementById('tab-my-trips').click();
+    } catch (e) {
+        alert('無効な共有コードです。');
+    }
+}
+
+window.importFromExplore = (event, code) => {
+    event.stopPropagation();
+    importTrip(code);
+};
 
 function saveActivity() {
     const title = document.getElementById('modal-activity-title').value;
@@ -192,8 +235,14 @@ function showDashboard() {
     UI.renderDashboard(allTrips);
 }
 
-function openTrip(id) {
-    currentTrip = allTrips.find(t => t.id === id);
+function openTrip(id, isExplore = false) {
+    if (isExplore) {
+        currentTrip = exploreTrips.find(t => t.id === id);
+        currentTrip.isExplore = true;
+    } else {
+        currentTrip = allTrips.find(t => t.id === id);
+        currentTrip.isExplore = false;
+    }
     currentDay = 1;
     UI.showView('trip');
     updateTripUI();
@@ -207,6 +256,7 @@ function updateTripUI() {
 }
 
 window.openEditModal = function(id) {
+    if (currentTrip.isExplore) return alert('見本プランは編集できません。');
     editingActivityId = id;
     const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
     const act = dayData.activities.find(a => a.id === id);
@@ -226,12 +276,14 @@ window.deleteTrip = (e, id) => {
 };
 
 window.deleteRecom = (index) => {
+    if (currentTrip.isExplore) return;
     currentTrip.recommendations.splice(index, 1);
     Storage.saveTrip(currentTrip);
     UI.renderRecommendations(currentTrip.recommendations);
 };
 
 window.deleteActivity = (id) => {
+    if (currentTrip.isExplore) return;
     if (confirm('削除しますか？')) {
         const dayData = currentTrip.itinerary.find(d => d.day === currentDay);
         dayData.activities = dayData.activities.filter(a => a.id !== id);
