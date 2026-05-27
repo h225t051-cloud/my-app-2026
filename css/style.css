@@ -21,6 +21,77 @@
     --glass-border: rgba(255, 255, 255, 0.3);
 }
 
+/* Trip Content Grid & Side Column */
+.trip-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.side-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.side-card {
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--glass-border);
+}
+
+.side-card h3 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--vibrant-1);
+}
+
+.map-search-container {
+    background: rgba(255, 140, 0, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.pac-input {
+    width: 100%;
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.pac-input:focus {
+    border-color: var(--vibrant-1);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 69, 0, 0.1);
+}
+
+.memo-area {
+    width: 100%;
+    min-height: 120px;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+}
+
+@media (max-width: 1000px) {
+    .trip-content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Modal Styles */
 .modal-overlay {
     position: fixed;

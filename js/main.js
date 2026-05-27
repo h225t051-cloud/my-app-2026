@@ -158,6 +158,15 @@ function init() {
         document.getElementById('activity-modal').style.display = 'none';
     });
 
+    document.getElementById('modal-search-map-btn').addEventListener('click', () => {
+        const title = document.getElementById('modal-activity-title').value;
+        if (title) {
+            window.open(`https://www.google.com/maps/search/${encodeURIComponent(title)}`, '_blank');
+        } else {
+            alert('場所の名前を入力してから検索してください');
+        }
+    });
+
     document.getElementById('save-activity-btn').addEventListener('click', saveActivity);
 
     document.getElementById('add-recom-btn').addEventListener('click', () => {

@@ -197,7 +197,10 @@
             <div class="modal-body">
                 <div class="input-group">
                     <label>タイトル</label>
-                    <input type="text" id="modal-activity-title" placeholder="例：新千歳空港 到着">
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="modal-activity-title" placeholder="例：新千歳空港 到着" style="flex: 1;">
+                        <button id="modal-search-map-btn" class="btn btn-secondary" title="Googleマップで場所を探す"><i data-lucide="map"></i> 検索</button>
+                    </div>
                 </div>
                 <div class="input-row">
                     <div class="input-group">
