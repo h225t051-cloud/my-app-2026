@@ -10,11 +10,26 @@
 <body>
     <header>
         <div class="container">
-            <h1 id="logo" style="cursor: pointer;"><i data-lucide="map-pin"></i> TabiPlan</h1>
+            <h1 id="logo" style="cursor: pointer; position: relative;">
+                <div class="monkey-mascot header-monkey">
+                    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="45" fill="#8B4513"/> <!-- Face outer -->
+                        <circle cx="50" cy="55" r="35" fill="#FFE4B5"/> <!-- Face inner -->
+                        <circle cx="25" cy="40" r="10" fill="#8B4513"/> <!-- Ear L -->
+                        <circle cx="75" cy="40" r="10" fill="#8B4513"/> <!-- Ear R -->
+                        <circle cx="40" cy="45" r="4" fill="#333"/> <!-- Eye L -->
+                        <circle cx="60" cy="45" r="4" fill="#333"/> <!-- Eye R -->
+                        <path d="M 40 65 Q 50 75 60 65" stroke="#333" stroke-width="3" fill="none"/> <!-- Smile -->
+                        <rect x="35" y="15" width="30" height="15" rx="5" fill="#FF4500"/> <!-- Hat -->
+                    </svg>
+                    <div class="monkey-speech">どこ行くの？</div>
+                </div>
+                <i data-lucide="map-pin"></i> TabiPlan
+            </h1>
             <nav>
                 <button id="back-to-home" class="btn btn-secondary" style="display: none;"><i data-lucide="arrow-left"></i> 戻る</button>
                 <button id="import-trip-btn" class="btn btn-secondary"><i data-lucide="download"></i> 読込</button>
-                <button id="add-trip-btn" class="btn btn-primary"><i data-lucide="plus"></i> 新しい旅行</button>
+                <button id="add-trip-btn" class="btn btn-primary" style="background: var(--vibrant-gradient); border: 2px solid white; box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);"><i data-lucide="plus"></i> 新しい旅行</button>
             </nav>
         </div>
     </header>

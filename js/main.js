@@ -166,7 +166,8 @@ function init() {
         const query = searchInput.value;
         if (query) {
             window.open(`https://www.google.com/maps/search/${encodeURIComponent(query)}`, '_blank');
-            if (!currentTrip.isExplore && confirm(`「${query}」をおすすめリストに追加しますか？`)) {
+            if (currentTrip && !currentTrip.isExplore && confirm(`「${query}」をおすすめリストに追加しますか？`)) {
+                currentTrip.recommendations = currentTrip.recommendations || [];
                 currentTrip.recommendations.push({ title: query, url: `https://www.google.com/maps/search/${encodeURIComponent(query)}` });
                 Storage.saveTrip(currentTrip);
                 UI.renderRecommendations(currentTrip.recommendations);
