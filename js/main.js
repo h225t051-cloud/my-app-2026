@@ -7,6 +7,7 @@ let editingActivityId = null;
 function init() {
     allTrips = Storage.loadAll();
     exploreTrips = Storage.loadExplore();
+    loadProfile();
     showDashboard();
 
     // Custom Event Listeners
@@ -39,6 +40,18 @@ function init() {
     // Navigation
     document.getElementById('logo').addEventListener('click', showDashboard);
     document.getElementById('back-to-home').addEventListener('click', showDashboard);
+    document.getElementById('my-page-btn').addEventListener('click', () => UI.showView('mypage'));
+
+    // Profile Actions
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('edit-usericon').value = btn.textContent;
+        });
+    });
+
+    document.getElementById('save-profile-btn').addEventListener('click', saveProfile);
 
     // Dashboard Actions
     document.getElementById('add-trip-btn').addEventListener('click', () => {
@@ -180,6 +193,34 @@ function init() {
         if (e.key === 'Enter') performSearch();
     });
     searchBtn.addEventListener('click', performSearch);
+}
+
+function loadProfile() {
+    const profile = Storage.loadProfile();
+    document.getElementById('profile-name-display').textContent = profile.name;
+    document.getElementById('profile-icon-display').textContent = profile.icon;
+    document.getElementById('profile-bio-display').textContent = profile.bio;
+    
+    document.getElementById('edit-username').value = profile.name;
+    document.getElementById('edit-userbio').value = profile.bio;
+    document.getElementById('edit-usericon').value = profile.icon;
+    
+    document.querySelectorAll('.emoji-btn').forEach(btn => {
+        if (btn.textContent === profile.icon) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
+}
+
+function saveProfile() {
+    const profile = {
+        name: document.getElementById('edit-username').value || 'ゲスト',
+        icon: document.getElementById('edit-usericon').value,
+        bio: document.getElementById('edit-userbio').value
+    };
+    Storage.saveProfile(profile);
+    loadProfile();
+    alert('プロフィールを保存しました！');
+    showDashboard();
 }
 
 function importTrip(code) {

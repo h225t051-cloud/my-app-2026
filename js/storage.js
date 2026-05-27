@@ -1,6 +1,20 @@
 const STORAGE_KEY = 'tabiplan_trips';
+const PROFILE_KEY = 'tabiplan_profile';
 
 const Storage = {
+    saveProfile(profile) {
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    },
+
+    loadProfile() {
+        const data = localStorage.getItem(PROFILE_KEY);
+        return data ? JSON.parse(data) : {
+            name: 'ゲストユーザー',
+            icon: '🐒',
+            bio: '旅を愛する猿です。'
+        };
+    },
+
     saveAll(trips) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(trips));
     },

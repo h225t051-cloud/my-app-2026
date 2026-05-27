@@ -27,6 +27,7 @@
                 <i data-lucide="map-pin"></i> TabiPlan
             </h1>
             <nav>
+                <button id="my-page-btn" class="btn btn-secondary"><i data-lucide="user"></i> マイページ</button>
                 <button id="back-to-home" class="btn btn-secondary" style="display: none;"><i data-lucide="arrow-left"></i> 戻る</button>
                 <button id="import-trip-btn" class="btn btn-secondary"><i data-lucide="download"></i> 読込</button>
                 <button id="add-trip-btn" class="btn btn-primary" style="background: var(--vibrant-gradient); border: 2px solid white; box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);"><i data-lucide="plus"></i> 新しい旅行</button>
@@ -54,6 +55,48 @@
                 <h2 class="section-title">おすすめの旅行記録</h2>
                 <div id="explore-grid" class="trips-grid">
                     <!-- Sample public trip cards will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- My Page View -->
+        <section id="mypage-view" style="display: none;">
+            <div class="card profile-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="profile-header" style="display: flex; align-items: center; gap: 2rem;">
+                    <div id="profile-icon-display" class="profile-icon-large" style="font-size: 5rem; width: 120px; height: 120px; background: var(--vibrant-gradient); display: flex; align-items: center; justify-content: center; border-radius: 50%; box-shadow: 0 10px 20px rgba(255, 69, 0, 0.2); border: 4px solid white;">🐒</div>
+                    <div class="profile-info-main">
+                        <h2 id="profile-name-display" style="font-size: 2rem; font-weight: 900;">ゲストユーザー</h2>
+                        <p id="profile-bio-display" class="text-muted">旅を愛する猿です。</p>
+                    </div>
+                </div>
+                <hr style="margin: 2.5rem 0; border: none; border-top: 2px solid var(--border-color);">
+                <div class="profile-edit-form">
+                    <h3 style="margin-bottom: 1.5rem;"><i data-lucide="settings"></i> プロフィール編集</h3>
+                    <div class="input-group">
+                        <label>ニックネーム</label>
+                        <input type="text" id="edit-username" placeholder="名前を入力...">
+                    </div>
+                    <div class="input-group" style="margin-top: 1.5rem;">
+                        <label>アイコン（絵文字）</label>
+                        <div class="emoji-picker" style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                            <button class="emoji-btn">🐒</button>
+                            <button class="emoji-btn">🦁</button>
+                            <button class="emoji-btn">🐯</button>
+                            <button class="emoji-btn">🐱</button>
+                            <button class="emoji-btn">🐶</button>
+                            <button class="emoji-btn">🦊</button>
+                            <button class="emoji-btn">🐨</button>
+                            <button class="emoji-btn">🐼</button>
+                            <button class="emoji-btn">🐰</button>
+                            <button class="emoji-btn">🐸</button>
+                        </div>
+                        <input type="hidden" id="edit-usericon" value="🐒">
+                    </div>
+                    <div class="input-group" style="margin-top: 1.5rem;">
+                        <label>ひとことメモ</label>
+                        <textarea id="edit-userbio" placeholder="自己紹介など..." style="min-height: 100px;"></textarea>
+                    </div>
+                    <button id="save-profile-btn" class="btn btn-primary btn-block" style="margin-top: 2rem;">プロフィールを保存</button>
                 </div>
             </div>
         </section>

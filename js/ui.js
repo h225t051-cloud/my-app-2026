@@ -2,10 +2,13 @@ const UI = {
     showView(viewId) {
         document.getElementById('dashboard-view').style.display = viewId === 'dashboard' ? 'block' : 'none';
         document.getElementById('trip-view').style.display = viewId === 'trip' ? 'block' : 'none';
+        document.getElementById('mypage-view').style.display = viewId === 'mypage' ? 'block' : 'none';
+        
         document.querySelector('.tab-nav').style.display = viewId === 'dashboard' ? 'flex' : 'none';
-        document.getElementById('back-to-home').style.display = viewId === 'trip' ? 'inline-flex' : 'none';
+        document.getElementById('back-to-home').style.display = (viewId === 'trip' || viewId === 'mypage') ? 'inline-flex' : 'none';
         document.getElementById('add-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
         document.getElementById('import-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
+        document.getElementById('my-page-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
     },
 
     renderDashboard(trips) {
