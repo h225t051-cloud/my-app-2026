@@ -53,7 +53,7 @@ const UI = {
                 <div class="trip-meta"><i data-lucide="user"></i> ${trip.author || '旅行者さん'}</div>
                 <div class="trip-meta"><i data-lucide="calendar"></i> ${trip.startDate} - ${trip.endDate}</div>
                 <div class="trip-footer">
-                    <button class="btn btn-secondary btn-sm" onclick="importFromExplore(event, '${btoa(JSON.stringify(trip))}')"><i data-lucide="download"></i> プランをコピー</button>
+                    <button class="btn btn-secondary btn-sm" onclick="importFromExplore(event, '${btoa(unescape(encodeURIComponent(JSON.stringify(trip))))}')"><i data-lucide="download"></i> プランをコピー</button>
                 </div>
             `;
             card.addEventListener('click', () => {

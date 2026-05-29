@@ -109,9 +109,15 @@ function init() {
 
     document.getElementById('share-trip-btn').addEventListener('click', () => {
         if (!currentTrip) return;
-        const code = btoa(JSON.stringify(currentTrip));
-        document.getElementById('share-code').value = code;
-        document.getElementById('share-modal').style.display = 'flex';
+        try {
+            const jsonStr = JSON.stringify(currentTrip);
+            const code = btoa(unescape(encodeURIComponent(jsonStr)));
+            document.getElementById('share-code').value = code;
+            document.getElementById('share-modal').style.display = 'flex';
+        } catch (e) {
+            console.error('Encoding error:', e);
+            alert('共有コードの作成に失敗しました。');
+        }
     });
 
     document.getElementById('close-share-modal').addEventListener('click', () => {
@@ -120,9 +126,23 @@ function init() {
 
     document.getElementById('copy-share-code').addEventListener('click', () => {
         const el = document.getElementById('share-code');
-        el.select();
-        document.execCommand('copy');
-        alert('共有コードをコピーしました！');
+        const code = el.value;
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('共有コードをコピーしました！');
+            }).catch(err => {
+                console.error('Copy failed:', err);
+                // Fallback
+                el.select();
+                document.execCommand('copy');
+                alert('共有コードをコピーしました！');
+            });
+        } else {
+            el.select();
+            document.execCommand('copy');
+            alert('共有コードをコピーしました！');
+        }
     });
 
     document.getElementById('add-comment-btn').addEventListener('click', () => {
@@ -234,7 +254,8 @@ function saveProfile() {
 
 function importTrip(code) {
     try {
-        const trip = JSON.parse(atob(code));
+        const jsonStr = decodeURIComponent(escape(atob(code)));
+        const trip = JSON.parse(jsonStr);
         trip.id = Date.now().toString(); 
         allTrips.push(trip);
         Storage.saveAll(allTrips);
@@ -244,6 +265,7 @@ function importTrip(code) {
         // Switch back to my trips tab
         document.getElementById('tab-my-trips').click();
     } catch (e) {
+        console.error('Import error:', e);
         alert('無効な共有コードです。');
     }
 }

@@ -637,6 +637,39 @@ h1 {
     box-shadow: 0 4px 10px rgba(255, 69, 0, 0.2);
 }
 
+/* Icon Buttons */
+.btn-icon, .btn-icon-delete {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    color: var(--text-muted);
+}
+
+.btn-icon:hover {
+    background: white;
+    color: var(--vibrant-1);
+    transform: scale(1.1);
+}
+
+.btn-icon-delete:hover {
+    background: #fffafa;
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+    transform: scale(1.1);
+}
+
+/* Utility Classes */
+.text-danger { color: var(--danger-color) !important; }
+.text-primary { color: var(--vibrant-1) !important; }
+.text-muted { color: var(--text-muted) !important; }
+.btn-sm { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
 /* Glass Card */
 .glass-card {
     background: rgba(255, 255, 255, 0.85);
@@ -675,10 +708,81 @@ h1 {
     .days-nav ul {
         display: flex;
         overflow-x: auto;
+        padding-bottom: 5px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .days-nav li {
+        white-space: nowrap;
+        flex-shrink: 0;
     }
 
     #trip-header {
         flex-direction: column;
         gap: 1.5rem;
+        text-align: center;
+    }
+
+    .trip-stats {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 0 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    #trip-title {
+        font-size: 1.8rem;
+    }
+
+    .trip-stats {
+        gap: 1rem;
+    }
+
+    .stat {
+        flex: 1 1 40%;
+    }
+
+    #share-trip-btn {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .activity-card {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1.2rem;
+    }
+
+    .activity-card .time {
+        min-width: auto;
+    }
+
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+    }
+
+    .welcome-mascot {
+        display: none;
+    }
+    
+    .dashboard-welcome {
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.8rem;
     }
 }
