@@ -2,9 +2,14 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TabiPlan - 旅行計画アプリ</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff8c00">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -31,7 +36,7 @@
                 </div>
                 <i data-lucide="map-pin"></i> TabiPlan
             </h1>
-            <nav>
+            <nav class="desktop-nav">
                 <button id="my-page-btn" class="btn btn-secondary"><i data-lucide="user"></i> マイページ</button>
                 <button id="back-to-home" class="btn btn-secondary" style="display: none;"><i data-lucide="arrow-left"></i> 戻る</button>
                 <button id="import-trip-btn" class="btn btn-secondary"><i data-lucide="download"></i> 読込</button>
@@ -295,6 +300,31 @@
             </div>
         </div>
     </div>
+
+    <!-- Bottom Navigation for Mobile -->
+    <nav class="bottom-nav">
+        <button id="bottom-home-btn" class="nav-item active">
+            <i data-lucide="home"></i>
+            <span>ホーム</span>
+        </button>
+        <button id="bottom-add-btn" class="nav-item">
+            <i data-lucide="plus-circle"></i>
+            <span>新規作成</span>
+        </button>
+        <button id="bottom-import-btn" class="nav-item">
+            <i data-lucide="download"></i>
+            <span>読込</span>
+        </button>
+        <button id="bottom-mypage-btn" class="nav-item">
+            <i data-lucide="user"></i>
+            <span>マイページ</span>
+        </button>
+    </nav>
+
+    <!-- Floating Action Button for Adding Activity -->
+    <button id="fab-add-activity" class="fab" style="display: none;">
+        <i data-lucide="plus"></i>
+    </button>
 
     <script src="js/storage.js"></script>
     <script src="js/ui.js"></script>

@@ -99,6 +99,34 @@ function init() {
         }
     });
 
+    // Bottom Navigation Listeners
+    document.getElementById('bottom-home-btn').addEventListener('click', () => {
+        showDashboard();
+        updateBottomNavActive('bottom-home-btn');
+    });
+
+    document.getElementById('bottom-add-btn').addEventListener('click', () => {
+        document.getElementById('modal-trip-title').value = '';
+        document.getElementById('trip-modal').style.display = 'flex';
+        updateBottomNavActive('bottom-add-btn');
+    });
+
+    document.getElementById('bottom-import-btn').addEventListener('click', () => {
+        const code = prompt('共有コードを貼り付けてください');
+        if (code) importTrip(code);
+        updateBottomNavActive('bottom-import-btn');
+    });
+
+    document.getElementById('bottom-mypage-btn').addEventListener('click', () => {
+        UI.showView('mypage');
+        updateBottomNavActive('bottom-mypage-btn');
+    });
+
+    // FAB Listener
+    document.getElementById('fab-add-activity').addEventListener('click', () => {
+        document.getElementById('add-activity-btn').click();
+    });
+
     // Trip View Actions
     document.getElementById('trip-notes').addEventListener('input', (e) => {
         if (currentTrip && !currentTrip.isExplore) {
@@ -222,6 +250,12 @@ function init() {
         if (e.key === 'Enter') performSearch();
     });
     searchBtn.addEventListener('click', performSearch);
+}
+
+function updateBottomNavActive(activeId) {
+    document.querySelectorAll('.bottom-nav .nav-item').forEach(item => {
+        item.classList.toggle('active', item.id === activeId);
+    });
 }
 
 function loadProfile() {

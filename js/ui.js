@@ -9,6 +9,22 @@ const UI = {
         document.getElementById('add-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
         document.getElementById('import-trip-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
         document.getElementById('my-page-btn').style.display = viewId === 'dashboard' ? 'inline-flex' : 'none';
+
+        // FAB visibility
+        const fab = document.getElementById('fab-add-activity');
+        if (viewId === 'trip') {
+            fab.classList.add('visible');
+            fab.style.display = 'flex';
+        } else {
+            fab.classList.remove('visible');
+            fab.style.display = 'none';
+        }
+
+        // Bottom nav sync
+        if (typeof updateBottomNavActive === 'function') {
+            if (viewId === 'dashboard') updateBottomNavActive('bottom-home-btn');
+            if (viewId === 'mypage') updateBottomNavActive('bottom-mypage-btn');
+        }
     },
 
     renderDashboard(trips) {
